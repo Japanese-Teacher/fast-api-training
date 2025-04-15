@@ -15,6 +15,10 @@ books_db = [
     Book(id=1, title = "Sample Book", author= "Sample Author")
 ]
 
+@app.get("/")
+async def root():
+    return {"message": "Добро пожаловать в API библиотеки!"}
+
 @app.get("/books", response_model=List[Book])
 async def get_books():
     return books_db
