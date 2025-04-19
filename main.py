@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List
 
 app = FastAPI()
 
@@ -20,7 +19,7 @@ async def root() -> dict:
     return {"message": "Добро пожаловать в API библиотеки!"}
 
 @app.get("/books", response_model=list[Book])
-async def get_books() -> List:
+async def get_books() -> list:
     return books_db
 
 @app.post("/books", response_model=Book)
