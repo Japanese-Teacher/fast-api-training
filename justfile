@@ -1,8 +1,8 @@
 mypy:
-  mypy main.py
+  mypy app
 
 ruff:
-  ruff check
+  ruff check --fix
 
 lint: mypy ruff
 
