@@ -9,5 +9,7 @@ lint: mypy ruff
 run:
   uvicorn app.main:app --reload
 
-tests:
-  pytest tests/
+TESTS_DIR := "tests/"
+
+test:
+    pytest {{TESTS_DIR}}
