@@ -12,19 +12,19 @@ class Book(BaseModel):
 
 
 books_db = [
-    Book(id=1, title = "Sample Book", author= "Sample Author")
+    Book(id=1, title="Sample Book", author="Sample Author")
 ]
 
 @app.get("/")
-async def root():
+async def root() -> dict:
     return {"message": "Добро пожаловать в API библиотеки!"}
 
-@app.get("/books", response_model=List[Book])
-async def get_books():
+@app.get("/books", response_model=list[Book])
+async def get_books() -> List:
     return books_db
 
 @app.post("/books", response_model=Book)
-async def add_book(book: Book):
+async def add_book(book: Book) -> Book:
 
     for b in books_db:
         if b.id == book.id:
