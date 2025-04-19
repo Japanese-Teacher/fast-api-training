@@ -15,11 +15,11 @@ books_db = [
 ]
 
 @app.get("/")
-async def root() -> dict:
+async def root() -> dict[str, str]:
     return {"message": "Добро пожаловать в API библиотеки!"}
 
 @app.get("/books", response_model=list[Book])
-async def get_books() -> list:
+async def get_books() -> list[Book]:
     return books_db
 
 @app.post("/books", response_model=Book)
