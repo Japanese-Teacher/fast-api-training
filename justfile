@@ -8,3 +8,6 @@ lint: mypy ruff
 
 run:
   uvicorn app.main:app --reload
+
+tests:
+  pytest tests/
