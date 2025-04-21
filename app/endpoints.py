@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from app.other import Book, books_db
 
 book_router = APIRouter(
-    prefix="/prefix",  # Префикс для всех эндпоинтов этого роутера
+    prefix="/",  # Префикс для всех эндпоинтов этого роутера
     tags=["Books"],  # Тег для группировки в документации Swagger
 )
 
