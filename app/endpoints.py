@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.other import Book, books_db
+from app.models import Book, books_db
 
 book_router = APIRouter(
     prefix="/",  # Префикс для всех эндпоинтов этого роутера
