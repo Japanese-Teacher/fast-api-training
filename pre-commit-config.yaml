@@ -1,0 +1,5 @@
+repos:
+  - repo: https://github.com/Japanese-Teacher/fast-api-training
+    hooks:
+      - id: trailing-whitespace  # Удаляет пробелы в концах строк
+      - id: check-yaml           # Проверяет синтаксис YAML
