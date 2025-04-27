@@ -1,6 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, HTTPException, Depends
 
 from app.models import Book, books_db
+from app.services.book_service import BookService, get_book_service, get_a, get_b
 
 book_router = APIRouter(
     prefix="/books",  # Префикс для всех эндпоинтов этого роутера
@@ -36,9 +39,12 @@ async def update_book(book_id: int, updated_book: Book) -> Book:
     raise HTTPException(status_code=404, detail="Книга не найдена")
 
 @book_router.delete("/{book_id}", response_model=dict)
-async def delete_book(book_id: int) -> dict[str, str | Book]:
-    for idx, book in enumerate(books_db):
-        if book.id == book_id:
-            deleted_book = books_db.pop(idx)
-            return {"message": "Книга успешно удалена", "deleted_book": deleted_book}
-    raise HTTPException(status_code=404, detail="Книга не найдена")
+async def delete_book(
+    book_service: Annotated[BookService, Depends(BookService)],
+    book_id: int,
+) -> dict[str, str]:
+    try:
+        book_service.delete_book(book_id)
+        return {"message": "Книга успешно удалена"}
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Книга не найдена")
