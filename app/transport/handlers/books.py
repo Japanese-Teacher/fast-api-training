@@ -3,22 +3,17 @@ from fastapi import APIRouter, HTTPException
 from app.models import Book, books_db
 
 book_router = APIRouter(
-    prefix="/",  # Префикс для всех эндпоинтов этого роутера
+    prefix="/books",  # Префикс для всех эндпоинтов этого роутера
     tags=["Books"],  # Тег для группировки в документации Swagger
 )
 
 
-@book_router.get("/")
-async def root() -> dict[str, str]:
-    return {"message": "Добро пожаловать в API библиотеки!"}
-
-
-@book_router.get("/books", response_model=list[Book])
+@book_router.get("", response_model=list[Book])
 async def get_books() -> list[Book]:
     return books_db
 
 
-@book_router.post("/books", response_model=Book)
+@book_router.post("", response_model=Book)
 async def add_book(book: Book) -> Book:
     for b in books_db:
         if b.id == book.id:
@@ -27,7 +22,7 @@ async def add_book(book: Book) -> Book:
     return book
 
 
-@book_router.put("/books/{book_id}", response_model=Book)
+@book_router.put("/{book_id}", response_model=Book)
 async def update_book(book_id: int, updated_book: Book) -> Book:
     for idx, book in enumerate(books_db):
         if book.id == book_id:
@@ -40,7 +35,7 @@ async def update_book(book_id: int, updated_book: Book) -> Book:
             return updated_book
     raise HTTPException(status_code=404, detail="Книга не найдена")
 
-@book_router.delete("/books/{book_id}", response_model=dict)
+@book_router.delete("/{book_id}", response_model=dict)
 async def delete_book(book_id: int) -> dict[str, str | Book]:
     for idx, book in enumerate(books_db):
         if book.id == book_id:
