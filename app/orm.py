@@ -24,6 +24,6 @@ class BookORM(BaseORM):
     name: Mapped[str] = mapped_column(nullable=False)
 
 # BaseORM.metadata.create_all(bind=engine)
-with SessionLocal() as session:
-    query = select(BookORM).order_by(BookORM.name)
-    print(session.execute(query).scalars().all())
+# with SessionLocal() as session:
+#     query = select(BookORM).order_by(BookORM.name)
+#     print(session.execute(query).scalars().all())
