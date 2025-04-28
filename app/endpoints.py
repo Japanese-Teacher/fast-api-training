@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException
+from sqlalchemy import select
 
 from app.models import Book, books_db
+from app.orm import SessionLocal, BookORM
 
 book_router = APIRouter(
-    prefix="/",  # Префикс для всех эндпоинтов этого роутера
+    prefix="",  # Префикс для всех эндпоинтов этого роутера
     tags=["Books"],  # Тег для группировки в документации Swagger
 )
 
@@ -15,7 +17,16 @@ async def root() -> dict[str, str]:
 
 @book_router.get("/books", response_model=list[Book])
 async def get_books() -> list[Book]:
-    return books_db
+    with SessionLocal() as session:
+        query = select(BookORM).order_by(BookORM.name)
+        query_result = session.execute(query).scalars().all()
+        return [
+            Book(
+                id=book.id,
+                title=book.name,
+            )
+            for book in query_result
+        ]
 
 
 @book_router.post("/books", response_model=Book)
