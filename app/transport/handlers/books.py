@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Depends
 
+from app.integrations.postgres.book_repository import BookRepository
 from app.models import Book, books_db
 from app.services.book_service import BookService, get_book_service, get_a, get_b
 
@@ -26,7 +27,10 @@ async def add_book(book: Book) -> Book:
 
 
 @book_router.put("/{book_id}", response_model=Book)
-async def update_book(book_id: int, updated_book: Book) -> Book:
+async def update_book(
+    book_id: int,
+    updated_book: Book,
+) -> Book:
     for idx, book in enumerate(books_db):
         if book.id == book_id:
             if updated_book.id != book_id:
