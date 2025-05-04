@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, String, select
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped
 from sqlalchemy.testing.schema import mapped_column
 
-from app.models import books_db
+# from app.models import books_db
 
 
 class BaseORM(DeclarativeBase):
