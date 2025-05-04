@@ -11,8 +11,8 @@ from app.transport.depends.db import get_session
 
 class BookRepository:
     def __init__(
-        self,
-        session: Annotated[Session, Depends(get_session)],
+            self,
+            session: Annotated[Session, Depends(get_session)],
     ):
         self._session = session
 
@@ -23,7 +23,7 @@ class BookRepository:
     def add_book(
             self,
             book: Book
-        ) -> None:
+    ) -> None:
         self._session.add(
             BookORM(
                 id=book.id,
@@ -31,7 +31,6 @@ class BookRepository:
             )
         )
         self._session.commit()
-        print("repository worked")
 
     def get_books(self) -> list[Book]:
         query_result = self._session.execute(select(BookORM))
@@ -44,7 +43,12 @@ class BookRepository:
                 )
             )
         return result
-    def update_book(self, book_id: int, new_data: str) -> BookORM | None:
+
+    def update_book(
+            self,
+            book_id: int,
+            new_data: str,
+    ) -> BookORM | None:
         book = self._session.get(BookORM, book_id)
         if book:
             book.name = new_data
