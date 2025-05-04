@@ -1,12 +1,6 @@
 from pydantic import BaseModel
 
 
-class Book(BaseModel):
+class BookDTO(BaseModel):
     id: int
-    title: str
-    author: str
-
-
-books_db = [
-    Book(id=1, title="Sample Book", author="Sample Author")
-]
+    name: str
