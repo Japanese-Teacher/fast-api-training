@@ -1,39 +1,36 @@
 from typing import Annotated, Any, Coroutine
-
 from fastapi import APIRouter, HTTPException, Depends
-
-from app.integrations.postgres.book_repository import BookRepository
-from app.models import Book
+from app.models import BookDTO
 from app.services.book_service import BookService, get_book_service
 
 book_router = APIRouter(
-    prefix="/books",  # Префикс для всех эндпоинтов этого роутера
-    tags=["Books"],  # Тег для группировки в документации Swagger
+    prefix="/books",
+    tags=["Books"],
 )
 
 
-@book_router.get("", response_model=list[Book])
+@book_router.get("", response_model=list[BookDTO])
 async def get_books(
         book_service: Annotated[BookService, Depends(BookService)]
-) -> list[Book]:
+) -> list[BookDTO]:
     return book_service.get_books()
 
 
 @book_router.post("", response_model=None)
 async def add_book(
-        book: Book,
+        book: BookDTO,
         book_service: Annotated[BookService, Depends(BookService)],
 ) -> None:
     book_service.add_book(book)
     print(book_service)
 
 
-@book_router.put("/{book_id}", response_model=Book)
+@book_router.put("/{book_id}", response_model=BookDTO)
 async def update_book(
         book_id: int,
         book_service: Annotated[BookService, Depends(BookService)],
         new_book: str
-) -> Book | None:
+) -> BookDTO | None:
     try:
         return book_service.update_book(book_id, new_book)
     except ValueError:

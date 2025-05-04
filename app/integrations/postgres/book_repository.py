@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app.models import Book
+from app.models import BookDTO
 from app.orm import BookORM
 from app.transport.depends.db import get_session
 
@@ -22,7 +22,7 @@ class BookRepository:
 
     def add_book(
             self,
-            book: Book
+            book: BookDTO
     ) -> None:
         self._session.add(
             BookORM(
@@ -32,12 +32,12 @@ class BookRepository:
         )
         self._session.commit()
 
-    def get_books(self) -> list[Book]:
+    def get_books(self) -> list[BookDTO]:
         query_result = self._session.execute(select(BookORM))
         result = []
         for book in query_result.scalars().all():
             result.append(
-                Book(
+                BookDTO(
                     id=book.id,
                     name=book.name,
                 )

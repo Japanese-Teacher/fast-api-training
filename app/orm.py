@@ -4,9 +4,6 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped
 from sqlalchemy.testing.schema import mapped_column
 
 
-# from app.models import books_db
-
-
 class BaseORM(DeclarativeBase):
     pass
 
