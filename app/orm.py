@@ -49,3 +49,17 @@ class UserORM(BaseORM):
     updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
     deleted_at: Mapped[datetime] = mapped_column(nullable=True)
 
+class CommentORM(BaseORM):
+    def __repr__(self):
+        return f"CommentORM(id={self.id}, book_id={self.book_id})"
+
+    __tablename__ = "comments"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    book_id: Mapped[int] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    comment: Mapped[str] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+    updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
+    deleted_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+
