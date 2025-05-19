@@ -20,9 +20,9 @@ class BookORM(BaseORM):
     publisher_name: Mapped[str] = mapped_column(ForeignKey("publishers.name"), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True, default=None)
-    created_at: Mapped[datetime] = mapped_column(server_default=text("now()"), nullable = False)
-    updated_at: Mapped[datetime] = mapped_column(nullable = False)
-    deleted_at: Mapped[datetime | None] = mapped_column(nullable = True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("now()"), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(nullable=False)
+    deleted_at: Mapped[datetime | None] = mapped_column(nullable=True)
 
 
 class AuthorORM(BaseORM):
@@ -33,6 +33,7 @@ class AuthorORM(BaseORM):
     name: Mapped[str] = mapped_column(primary_key=True)
     date_of_birth: Mapped[datetime] = mapped_column(nullable=True)
     nationality: Mapped[str] = mapped_column(nullable=True)
+
 
 class UserORM(BaseORM):
     def __repr__(self):
@@ -49,6 +50,7 @@ class UserORM(BaseORM):
     updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
     deleted_at: Mapped[datetime] = mapped_column(nullable=True)
 
+
 class CommentORM(BaseORM):
     def __repr__(self):
         return f"CommentORM(id={self.id}, book_id={self.book_id})"
@@ -63,3 +65,28 @@ class CommentORM(BaseORM):
     deleted_at: Mapped[datetime | None] = mapped_column(nullable=True)
 
 
+class ReadingRelationORM(BaseORM):
+    def __repr__(self):
+        return f"ReadingRelationORM(book_id={self.book_id}, user_id={self.user_id})"
+
+    __tablename__ = "reading_relation"
+
+    book_id: Mapped[int] = mapped_column(
+        ForeignKey("books.id",
+                   ondelete="CASCADE"),
+        primary_key=True,
+        index=True,
+    )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE"),
+        primary_key=True,
+        index=True,
+    )
+    continue_page: Mapped[int] = mapped_column(nullable=False, default=0)
+    favourite: Mapped[bool] = mapped_column(nullable=False, default=False)
+    review: Mapped[str] = mapped_column(nullable=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+    updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
+    deleted_at: Mapped[datetime] = mapped_column(nullable=True)
