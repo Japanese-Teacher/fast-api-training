@@ -90,3 +90,12 @@ class ReadingRelationORM(BaseORM):
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
     updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
     deleted_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+
+class PublisherORM(BaseORM):
+    def __repr__(self):
+        return f"PublisherORM(name={self.name})"
+
+    __tablename__ = "publishers"
+
+    name: Mapped[str] = mapped_column(primary_key=True)
