@@ -23,3 +23,13 @@ class BookORM(BaseORM):
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"), nullable = False)
     updated_at: Mapped[datetime] = mapped_column(nullable = False)
     deleted_at: Mapped[datetime | None] = mapped_column(nullable = True)
+
+
+class AuthorORM(BaseORM):
+    def __repr__(self):
+        return f"AuthorORM(name={self.name}, nationality={self.nationality})"
+
+    __tablename__ = "authors"
+    name: Mapped[str] = mapped_column(primary_key=True)
+    date_of_birth: Mapped[datetime] = mapped_column(nullable=True)
+    nationality: Mapped[str] = mapped_column(nullable=True)
