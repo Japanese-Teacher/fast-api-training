@@ -33,3 +33,19 @@ class AuthorORM(BaseORM):
     name: Mapped[str] = mapped_column(primary_key=True)
     date_of_birth: Mapped[datetime] = mapped_column(nullable=True)
     nationality: Mapped[str] = mapped_column(nullable=True)
+
+class UserORM(BaseORM):
+    def __repr__(self):
+        return f"UserORM(id={self.id}, login={self.login})"
+
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    first_name: Mapped[str] = mapped_column(nullable=False)
+    second_name: Mapped[str] = mapped_column(nullable=False)
+    age: Mapped[int] = mapped_column(nullable=False)
+    login: Mapped[str] = mapped_column(nullable=False, unique=True)
+    password_hash: Mapped[str] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+    updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"), onupdate=text("now()"))
+    deleted_at: Mapped[datetime] = mapped_column(nullable=True)
+
