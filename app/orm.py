@@ -42,7 +42,7 @@ class BookORM(BaseORM):
     author_name: Mapped[str] = mapped_column(ForeignKey("authors.name", ondelete="CASCADE"), nullable=False)
     publisher_name: Mapped[str] = mapped_column(ForeignKey("publishers.name"), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[Text] = mapped_column(default=None)
+    description: Mapped[str] = mapped_column(Text, default=None)
 
 
 class AuthorORM(Base):
@@ -76,7 +76,7 @@ class CommentORM(BaseORM):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     book_id: Mapped[int] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    comment: Mapped[Text] = mapped_column(nullable=False)
+    comment: Mapped[str] = mapped_column(Text, default=None)
 
 
 class ReadingRelationORM(BaseORM):
