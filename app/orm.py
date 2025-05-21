@@ -5,31 +5,20 @@ from sqlalchemy import create_engine, String, select, ForeignKey, text, Text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped
 from sqlalchemy.testing.schema import mapped_column
 
+from app.mixins import CreatedAtMixin, UpdatedAtMixin, DeletedAtMixin
+
 
 class Base(DeclarativeBase):
     pass
 
 
-class CreatedAtMixin:
-    created_at: Mapped[datetime] = mapped_column(
-        server_default=text("now()"),
-        nullable=False
-    )
 
-
-class UpdatedAtMixin:
-    updated_at: Mapped[datetime] = mapped_column(
-        server_default=text("now()"),
-        onupdate=text("now()"),
-        nullable=False
-    )
-
-
-class DeletedAtMixin:
-    deleted_at: Mapped[datetime | None] = mapped_column()
-
-
-class BaseORM(Base, CreatedAtMixin, UpdatedAtMixin, DeletedAtMixin):
+class BaseORM(
+    Base,
+    CreatedAtMixin,
+    UpdatedAtMixin,
+    DeletedAtMixin,
+):
     __abstract__ = True
 
 
