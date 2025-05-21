@@ -12,7 +12,6 @@ class Base(DeclarativeBase):
     pass
 
 
-
 class BaseORM(
     Base,
     CreatedAtMixin,
@@ -28,8 +27,19 @@ class BookORM(BaseORM):
 
     __tablename__ = "books"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    author_name: Mapped[str] = mapped_column(ForeignKey("authors.name", ondelete="CASCADE"), nullable=False)
-    publisher_name: Mapped[str] = mapped_column(ForeignKey("publishers.name"), nullable=False)
+    author_name: Mapped[str] = mapped_column(
+        String(100),
+        ForeignKey(
+            "authors.name",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+    publisher_name: Mapped[str] = mapped_column(
+        String(100),
+        ForeignKey("publishers.name"),
+        nullable=False,
+    )
     name: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(Text, default=None)
 
@@ -39,9 +49,12 @@ class AuthorORM(Base):
         return f"AuthorORM(name={self.name}, nationality={self.nationality})"
 
     __tablename__ = "authors"
-    name: Mapped[str] = mapped_column(primary_key=True)
-    date_of_birth: Mapped[datetime] = mapped_column()
-    nationality: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column(
+        String(100),
+        primary_key=True
+    )
+    date_of_birth: Mapped[datetime]
+    nationality: Mapped[str] = mapped_column(String(50))
 
 
 class UserORM(BaseORM):
@@ -50,11 +63,15 @@ class UserORM(BaseORM):
 
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    first_name: Mapped[str] = mapped_column(nullable=False)
-    second_name: Mapped[str] = mapped_column(nullable=False)
+    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    second_name: Mapped[str] = mapped_column(String(100), nullable=False)
     age: Mapped[int] = mapped_column(nullable=False)
-    login: Mapped[str] = mapped_column(nullable=False, unique=True)
-    password_hash: Mapped[str] = mapped_column(nullable=False)
+    login: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        unique=True,
+    )
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
 
 class CommentORM(BaseORM):
@@ -63,8 +80,19 @@ class CommentORM(BaseORM):
 
     __tablename__ = "comments"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    book_id: Mapped[int] = mapped_column(ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    book_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "books.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE", ),
+        nullable=False,
+    )
     comment: Mapped[str] = mapped_column(Text, default=None)
 
 
@@ -89,7 +117,7 @@ class ReadingRelationORM(BaseORM):
     )
     continue_page: Mapped[int] = mapped_column(nullable=False, default=0)
     favourite: Mapped[bool] = mapped_column(nullable=False, default=False)
-    review: Mapped[str] = mapped_column()
+    review: Mapped[str] = mapped_column(Text, default=None)
 
 
 class PublisherORM(Base):
@@ -98,4 +126,4 @@ class PublisherORM(Base):
 
     __tablename__ = "publishers"
 
-    name: Mapped[str] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), primary_key=True)
