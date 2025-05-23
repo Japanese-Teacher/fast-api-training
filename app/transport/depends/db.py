@@ -4,9 +4,11 @@ from fastapi import Depends
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.utils.settings import get_env_settings
+
 
 def get_engine() -> Engine:
-    return create_engine('postgresql+psycopg2://user:password@localhost:5432/mydb')
+    return create_engine(get_env_settings().postgres_dsn)
 
 
 def get_session_maker(
