@@ -25,7 +25,7 @@ class BookRepository:
             book: BookDTO
     ) -> None:
         self._session.add(
-            BookDTO(
+            BookORM(
                 id=book.id,
                 name=book.name,
             )
@@ -49,7 +49,7 @@ class BookRepository:
             book_id: int,
             new_data: str,
     ) -> BookDTO | None:
-        book = self._session.get(BookDTO, book_id)
+        book = self._session.get(BookORM, book_id)
         if book:
             book.name = new_data
             self._session.commit()
