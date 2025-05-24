@@ -27,13 +27,12 @@ class BookORM(BaseORM):
 
     __tablename__ = "books"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    author_name: Mapped[str] = mapped_column(
+    author_name: Mapped[str | None] = mapped_column(
         String(100),
         ForeignKey(
             "authors.name",
             ondelete="CASCADE",
         ),
-        nullable=False,
     )
     publisher_name: Mapped[str] = mapped_column(
         String(100),
@@ -41,7 +40,7 @@ class BookORM(BaseORM):
         nullable=False,
     )
     name: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[str] = mapped_column(Text, default=None)
+    description: Mapped[str | None] = mapped_column(Text, default=None)
 
 
 class AuthorORM(Base):
@@ -93,7 +92,7 @@ class CommentORM(BaseORM):
             ondelete="CASCADE", ),
         nullable=False,
     )
-    comment: Mapped[str] = mapped_column(Text, default=None)
+    comment: Mapped[str | None] = mapped_column(Text, default=None)
 
 
 class ReadingRelationORM(BaseORM):
