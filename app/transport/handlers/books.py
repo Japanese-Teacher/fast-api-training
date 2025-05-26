@@ -1,7 +1,7 @@
-from typing import Annotated, Any, Coroutine
+from typing import Annotated
 from fastapi import APIRouter, HTTPException, Depends
 from app.models import BookDTO
-from app.services.book_service import BookService, get_book_service
+from app.services.book_service import BookService
 
 book_router = APIRouter(
     prefix="/books",
@@ -13,7 +13,10 @@ book_router = APIRouter(
 async def get_books(
         book_service: Annotated[BookService, Depends(BookService)]
 ) -> list[BookDTO]:
-    return book_service.get_books()
+    print("1"*1000)
+    result = book_service.get_books()
+    print(result)
+    return result
 
 
 @book_router.post("", response_model=None)
@@ -21,18 +24,26 @@ async def add_book(
         book: BookDTO,
         book_service: Annotated[BookService, Depends(BookService)],
 ) -> None:
+    print("1"*1000)
     book_service.add_book(book)
     print(book_service)
 
 
 @book_router.put("/{book_id}", response_model=BookDTO)
 async def update_book(
-        book_id: int,
         book_service: Annotated[BookService, Depends(BookService)],
-        new_book: str
+        book_id: int,
+        new_name: str,
+        new_publisher_name: str,
+        new_description: str,
 ) -> BookDTO | None:
     try:
-        return book_service.update_book(book_id, new_book)
+        return book_service.update_book(
+            book_id,
+            new_name,
+            new_publisher_name,
+            new_description,
+        )
     except ValueError:
         raise HTTPException(status_code=404, detail="Книга не найдена")
 

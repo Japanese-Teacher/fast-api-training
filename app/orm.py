@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from mypyc.ir.ops import Integer
-from sqlalchemy import create_engine, String, select, ForeignKey, text, Text
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped
+from sqlalchemy import String, ForeignKey, Text
+from sqlalchemy.orm import DeclarativeBase, Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
 from app.mixins import CreatedAtMixin, UpdatedAtMixin, DeletedAtMixin
@@ -27,13 +26,6 @@ class BookORM(BaseORM):
 
     __tablename__ = "books"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    author_name: Mapped[str | None] = mapped_column(
-        String(100),
-        ForeignKey(
-            "authors.name",
-            ondelete="CASCADE",
-        ),
-    )
     publisher_name: Mapped[str] = mapped_column(
         String(100),
         ForeignKey("publishers.name"),
@@ -41,6 +33,7 @@ class BookORM(BaseORM):
     )
     name: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str | None] = mapped_column(Text, default=None)
+    authors = relationship("AuthorORM", secondary="book_author_relations", back_populates="books")
 
 
 class AuthorORM(Base):
@@ -54,6 +47,7 @@ class AuthorORM(Base):
     )
     date_of_birth: Mapped[datetime]
     nationality: Mapped[str] = mapped_column(String(50))
+    books = relationship("BookORM", secondary="book_author_relations", back_populates="authors")
 
 
 class UserORM(BaseORM):
@@ -126,3 +120,20 @@ class PublisherORM(Base):
     __tablename__ = "publishers"
 
     name: Mapped[str] = mapped_column(String(100), primary_key=True)
+
+
+class BookAuthorRelationsORM(Base):
+    def __repr__(self):
+        return f"ReadingRelationsORM(book_id={self.book_id}, author_name={self.author_name})"
+
+    __tablename__ = "book_author_relations"
+
+    author_name: Mapped[str | None] = mapped_column(
+        ForeignKey("authors.name"),
+        primary_key=True,
+    )
+    book_id: Mapped[int] = mapped_column(
+        ForeignKey("books.id"),
+        primary_key=True,
+        index=True,
+    )

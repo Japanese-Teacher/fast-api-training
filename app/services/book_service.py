@@ -28,9 +28,16 @@ class BookService:
     def update_book(
             self,
             book_id: int,
-            new_data: str
+            new_name: str,
+            new_publisher_name: str,
+            new_description: str,
     ) -> None:
-        return self._book_repository.update_book(book_id, new_data)
+        return self._book_repository.update_book(
+            book_id,
+            new_name,
+            new_publisher_name,
+            new_description,
+        )
 
 
 def get_book_service():

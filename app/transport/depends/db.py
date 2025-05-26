@@ -19,4 +19,9 @@ def get_session(
     session_maker: Annotated[sessionmaker, Depends(get_session_maker)],
 ) -> Generator[Session, None, None]:
     with session_maker() as session:
-        yield session
+        try:
+            yield session
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
