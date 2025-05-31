@@ -25,3 +25,6 @@ class NewAuthorDTO(BaseModel):
     new_name: str
     new_nationality: str
     new_date_of_birth: datetime
+
+class PublisherDTO(BaseModel):
+    name: str
