@@ -34,4 +34,3 @@ class AuthorService:
             author_name: str,
     ) -> str:
         return self.author_repository.delete_author(author_name)
-

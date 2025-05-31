@@ -10,11 +10,13 @@ author_router = APIRouter(
     tags=["Authors"],
 )
 
+
 @author_router.get('', response_model=list[AuthorDTO])
 async def get_authors(
         author_service: Annotated[AuthorService, Depends(AuthorService)]
 ) -> list[AuthorDTO]:
     return author_service.get_authors()
+
 
 @author_router.post('', response_model=AuthorDTO)
 async def add_author(
@@ -23,6 +25,7 @@ async def add_author(
 ) -> AuthorDTO:
     return author_service.add_author(author_dto)
 
+
 @author_router.put('', response_model=NewAuthorDTO)
 async def update_author(
         author_service: Annotated[AuthorService, Depends(AuthorService)],
@@ -30,6 +33,7 @@ async def update_author(
         new_author_dto: NewAuthorDTO,
 ) -> NewAuthorDTO:
     return author_service.update_author(author_name, new_author_dto)
+
 
 @author_router.delete('', response_model=str)
 async def delete_author(
