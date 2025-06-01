@@ -55,3 +55,10 @@ class NewUserDTO(BaseModel):
     new_age: int
     new_login: str
     new_password_hash: str
+
+
+class CommentDTO(BaseModel):
+    id: int
+    book_id: int
+    user_id: int
+    comment: str
