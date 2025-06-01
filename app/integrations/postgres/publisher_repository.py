@@ -1,10 +1,10 @@
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
-from app.models import PublisherDTO
+from app.models import PublisherDTO, NewPublisherDTO
 from app.orm import PublisherORM
 from app.transport.depends.db import get_session
 
@@ -37,3 +37,22 @@ class PublisherRepository:
         )
         self._session.flush()
         return publisher_dto
+
+    def update_publisher(
+            self,
+            publisher_dto: PublisherDTO,
+            new_publisher_dto: NewPublisherDTO,
+    ) -> NewPublisherDTO:
+        publisher_orm = self._session.get(PublisherORM, publisher_dto.name)
+        if publisher_orm:
+            publisher_orm.name = new_publisher_dto.name
+            self._session.flush()
+            self._session.refresh(publisher_orm)
+        return new_publisher_dto
+
+    def delete_publisher(
+            self,
+            publisher_name: str,
+    ) -> str:
+        self._session.execute(delete(PublisherORM).where(PublisherORM.name == publisher_name))
+        return "Удаление успешно произведено"

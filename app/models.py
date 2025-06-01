@@ -28,3 +28,6 @@ class NewAuthorDTO(BaseModel):
 
 class PublisherDTO(BaseModel):
     name: str
+
+class NewPublisherDTO(BaseModel):
+    name: str
