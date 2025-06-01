@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from app.integrations.postgres.book_repository import BookRepository
-from app.models import BookDTO
+from app.models import BookDTO, NewBookDTO
 
 
 class BookService:
@@ -27,10 +27,11 @@ class BookService:
 
     def update_book(
             self,
-            book_id: int,
-            new_data: str
+            new_book_dto: NewBookDTO,
     ) -> None:
-        return self._book_repository.update_book(book_id, new_data)
+        return self._book_repository.update_book(
+            new_book_dto,
+        )
 
 
 def get_book_service():
