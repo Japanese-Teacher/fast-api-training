@@ -23,10 +23,10 @@ class PublisherService:
         return self.publisher_repository.add_publisher(publisher_dto)
     def update_publisher(
             self,
-            publisher_dto: PublisherDTO,
+            publisher_name: str,
             new_publisher_dto: NewPublisherDTO,
     ) -> NewPublisherDTO:
-        return self.publisher_repository.update_publisher(publisher_dto, new_publisher_dto)
+        return self.publisher_repository.update_publisher(publisher_name, new_publisher_dto)
     def delete_publisher(
             self,
             publisher_name: str

@@ -40,10 +40,10 @@ class PublisherRepository:
 
     def update_publisher(
             self,
-            publisher_dto: PublisherDTO,
+            publisher_name: str,
             new_publisher_dto: NewPublisherDTO,
     ) -> NewPublisherDTO:
-        publisher_orm = self._session.get(PublisherORM, publisher_dto.name)
+        publisher_orm = self._session.get(PublisherORM, publisher_name)
         if publisher_orm:
             publisher_orm.name = new_publisher_dto.name
             self._session.flush()

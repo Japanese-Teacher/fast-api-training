@@ -28,10 +28,10 @@ async def add_publisher(
 @publisher_router.put('', response_model=PublisherDTO)
 async def update_publisher(
         publisher_service: Annotated[PublisherService, Depends(PublisherService)],
-        publisher_dto: PublisherDTO,
+        publisher_name: str,
         new_publisher_dto: NewPublisherDTO,
 ) -> NewPublisherDTO:
-    return publisher_service.update_publisher(publisher_dto,new_publisher_dto)
+    return publisher_service.update_publisher(publisher_name,new_publisher_dto)
 
 @publisher_router.delete('', response_model=str)
 async def delete_publisher(
