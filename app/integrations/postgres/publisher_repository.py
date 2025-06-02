@@ -16,8 +16,17 @@ class PublisherRepository:
     ):
         self._session = session
 
-    def get_publishers(self) -> list[PublisherDTO]:
-        publishers_orm = self._session.execute(select(PublisherORM))
+    def get_publishers(
+            self,
+            page: int,
+            size: int,
+    ) -> list[PublisherDTO]:
+        offset_val = (page - 1) * size
+        publishers_orm = self._session.execute(
+            select(PublisherORM)
+            .offset(offset_val)
+            .limit(size)
+        )
         return [PublisherDTO(
             name=publisher_orm.name,
         )

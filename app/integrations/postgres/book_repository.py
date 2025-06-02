@@ -34,8 +34,18 @@ class BookRepository:
         )
         self._session.flush()
 
-    def get_books(self) -> list[BookDTO]:
-        books_orm = self._session.execute(select(BookORM))
+    def get_books(
+            self,
+            page: int,
+            size: int,
+    ) -> list[BookDTO]:
+        offset_val = (page - 1) * size
+        books_orm = self._session.execute(
+            select(BookORM)
+            .order_by(BookORM.id)
+            .offset(offset_val)
+            .limit(size)
+        )
         return [BookDTO(
             id=book_orm.id,
             authors=[

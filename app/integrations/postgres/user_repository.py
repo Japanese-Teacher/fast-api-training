@@ -16,8 +16,18 @@ class UserRepository:
     ):
         self._session = session
 
-    def get_users(self) -> list[UserDTO]:
-        users_orm = self._session.execute(select(UserORM))
+    def get_users(
+            self,
+            page: int,
+            size: int,
+    ) -> list[UserDTO]:
+        offset_val = (page - 1) * size
+        users_orm = self._session.execute(
+            select(UserORM)
+            .order_by(UserORM.id)
+            .offset(offset_val)
+            .limit(size)
+        )
         users_dto = []
         for user_orm in users_orm.scalars().all():
             user_dto = UserDTO(

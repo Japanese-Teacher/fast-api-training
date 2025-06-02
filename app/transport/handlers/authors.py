@@ -13,9 +13,11 @@ author_router = APIRouter(
 
 @author_router.get('', response_model=list[AuthorDTO])
 async def get_authors(
-        author_service: Annotated[AuthorService, Depends(AuthorService)]
+        author_service: Annotated[AuthorService, Depends(AuthorService)],
+        page: int,
+        size: int,
 ) -> list[AuthorDTO]:
-    return author_service.get_authors()
+    return author_service.get_authors(page, size)
 
 
 @author_router.post('', response_model=AuthorDTO)

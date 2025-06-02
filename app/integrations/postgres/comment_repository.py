@@ -18,9 +18,17 @@ class CommentRepository:
 
     def get_comments(
             self,
-            book_id: int
+            book_id: int,
+            page: int,
+            size: int
     ) -> list[CommentDTO]:
-        comments_orm = self._session.execute(select(CommentORM).where(CommentORM.id == book_id))
+        offset_val = (page - 1) * size
+        comments_orm = self._session.execute(
+            select(CommentORM)
+            .where(CommentORM.id == book_id)
+            .offset(offset_val)
+            .limit(size)
+        )
         return [
             CommentDTO(
                 id=comment_orm.id,

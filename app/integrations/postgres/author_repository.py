@@ -16,8 +16,17 @@ class AuthorRepository:
     ):
         self._session = session
 
-    def get_authors(self) -> list[AuthorDTO]:
-        authors_orm = self._session.execute(select(AuthorORM))
+    def get_authors(
+            self,
+            page: int,
+            size: int
+    ) -> list[AuthorDTO]:
+        offset_val = (page - 1) * size
+        authors_orm = self._session.execute(
+            select(AuthorORM)
+            .offset(offset_val)
+            .limit(size)
+        )
         return [AuthorDTO(
             name=author_orm.name,
             nationality=author_orm.nationality,

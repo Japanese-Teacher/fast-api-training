@@ -15,8 +15,10 @@ user_router = APIRouter(
 @user_router.get('', response_model=list[UserDTO])
 async def get_users(
         user_service: Annotated[UserService, Depends(UserService)],
+        page: int,
+        size: int,
 ) -> list[UserDTO]:
-    return user_service.get_users()
+    return user_service.get_users(page, size)
 
 
 @user_router.post('', response_model=UserDTO)
