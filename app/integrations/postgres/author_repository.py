@@ -17,16 +17,15 @@ class AuthorRepository:
         self._session = session
 
     def get_authors(self) -> list[AuthorDTO]:
-        query_result = self._session.execute(select(AuthorORM))
-        authors_dto = []
-        for author_orm in query_result.scalars().all():
-            author_dto = AuthorDTO(
-                name=author_orm.name,
-                nationality=author_orm.nationality,
-                date_of_birth=author_orm.date_of_birth,
-            )
-            authors_dto.append(author_dto)
-        return authors_dto
+        authors_orm = self._session.execute(select(AuthorORM))
+        return [AuthorDTO(
+            name=author_orm.name,
+            nationality=author_orm.nationality,
+            date_of_birth=author_orm.date_of_birth,
+        )
+        for author_orm in authors_orm.scalars().all()
+    ]
+
 
     def add_author(
             self,
