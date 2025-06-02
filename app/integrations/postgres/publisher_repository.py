@@ -18,13 +18,11 @@ class PublisherRepository:
 
     def get_publishers(self) -> list[PublisherDTO]:
         publishers_orm = self._session.execute(select(PublisherORM))
-        publishers_dto = []
-        for publisher_orm in publishers_orm.scalars().all():
-            publisher_dto = PublisherDTO(
-                name=publisher_orm.name,
-            )
-            publishers_dto.append(publisher_dto)
-        return publishers_dto
+        return [PublisherDTO(
+            name=publisher_orm.name,
+        )
+            for publisher_orm in publishers_orm.scalars().all()
+        ]
 
     def add_publisher(
             self,

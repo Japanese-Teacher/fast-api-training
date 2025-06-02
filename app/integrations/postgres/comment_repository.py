@@ -21,16 +21,15 @@ class CommentRepository:
             book_id: int
     ) -> list[CommentDTO]:
         comments_orm = self._session.execute(select(CommentORM).where(CommentORM.id == book_id))
-        comments_dto = []
-        for comment_orm in comments_orm.scalars().all():
-            comment_dto = CommentDTO(
+        return [
+            CommentDTO(
                 id=comment_orm.id,
                 book_id=comment_orm.book_id,
                 user_id=comment_orm.user_id,
-                comment=comment_orm.comment
+                comment=comment_orm.comment,
             )
-            comments_dto.append(comment_dto)
-        return comments_dto
+            for comment_orm in comments_orm.scalars().all()
+        ]
 
     def add_comment(
             self,
