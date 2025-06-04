@@ -8,6 +8,9 @@ from app.models import BookDTO, AuthorDTO, NewBookDTO
 from app.orm import BookORM, AuthorORM
 from app.transport.depends.db import get_session
 
+def paginate(query, page, size):
+    offset_val = (page - 1) * size
+    return query.offset(offset_val).limit(size)
 
 class BookRepository:
     def __init__(
@@ -39,13 +42,9 @@ class BookRepository:
             page: int,
             size: int,
     ) -> list[BookDTO]:
-        offset_val = (page - 1) * size
-        books_orm = self._session.execute(
-            select(BookORM)
-            .order_by(BookORM.id)
-            .offset(offset_val)
-            .limit(size)
-        )
+        query = select(BookORM).order_by(BookORM.id)
+        paginated_query = paginate(query, page, size)
+        books_orm = self._session.execute(paginated_query)
         return [BookDTO(
             id=book_orm.id,
             authors=[

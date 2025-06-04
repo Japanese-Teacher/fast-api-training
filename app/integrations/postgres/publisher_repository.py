@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
+from app.integrations.postgres.book_repository import paginate
 from app.models import PublisherDTO, NewPublisherDTO
 from app.orm import PublisherORM
 from app.transport.depends.db import get_session
@@ -21,12 +22,9 @@ class PublisherRepository:
             page: int,
             size: int,
     ) -> list[PublisherDTO]:
-        offset_val = (page - 1) * size
-        publishers_orm = self._session.execute(
-            select(PublisherORM)
-            .offset(offset_val)
-            .limit(size)
-        )
+        query = select(PublisherORM)
+        paginated_query = paginate(query, page, size)
+        publishers_orm = self._session.execute(paginated_query)
         return [PublisherDTO(
             name=publisher_orm.name,
         )
