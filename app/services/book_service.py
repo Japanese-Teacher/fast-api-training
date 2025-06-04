@@ -22,8 +22,12 @@ class BookService:
     def add_book(self, book: BookDTO) -> None:
         return self._book_repository.add_book(book)
 
-    def get_books(self) -> list[BookDTO]:
-        return self._book_repository.get_books()
+    def get_books(
+            self,
+            page: int,
+            size: int,
+    ) -> list[BookDTO]:
+        return self._book_repository.get_books(page, size)
 
     def update_book(
             self,

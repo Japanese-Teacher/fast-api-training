@@ -8,6 +8,9 @@ from app.models import BookDTO, AuthorDTO, NewBookDTO
 from app.orm import BookORM, AuthorORM
 from app.transport.depends.db import get_session
 
+def paginate(query, page, size):
+    offset_val = (page - 1) * size
+    return query.offset(offset_val).limit(size)
 
 class BookRepository:
     def __init__(
@@ -34,28 +37,30 @@ class BookRepository:
         )
         self._session.flush()
 
-    def get_books(self) -> list[BookDTO]:
-        query_result = self._session.execute(select(BookORM))
-        result = []
-        for book_orm in query_result.scalars().all():
-            authors_dto = []
-            for author_orm in book_orm.authors:
-                author_dto = AuthorDTO(
+    def get_books(
+            self,
+            page: int,
+            size: int,
+    ) -> list[BookDTO]:
+        query = select(BookORM).order_by(BookORM.id)
+        paginated_query = paginate(query, page, size)
+        books_orm = self._session.execute(paginated_query)
+        return [BookDTO(
+            id=book_orm.id,
+            authors=[
+                AuthorDTO(
                     name=author_orm.name,
                     nationality=author_orm.nationality,
                     date_of_birth=author_orm.date_of_birth
                 )
-                authors_dto.append(author_dto)
-            result.append(
-                BookDTO(
-                    id=book_orm.id,
-                    authors=authors_dto,
-                    name=book_orm.name,
-                    publisher_name=book_orm.publisher_name,
-                    description=book_orm.description,
-                )
-            )
-        return result
+                for author_orm in book_orm.authors
+            ],
+            name=book_orm.name,
+            publisher_name=book_orm.publisher_name,
+            description=book_orm.description,
+        )
+            for book_orm in books_orm.scalars().all()
+        ]
 
     def update_book(
             self,
@@ -63,14 +68,14 @@ class BookRepository:
     ) -> NewBookDTO | None:
         book_orm = self._session.get(BookORM, new_book_dto.id)
         if book_orm:
-            authors_orm = []
-            for author_dto in new_book_dto.new_authors:
-                author_orm = AuthorORM(
+            authors_orm = [
+                AuthorORM(
                     name=author_dto.name,
                     nationality=author_dto.nationality,
-                    date_of_birth = author_dto.date_of_birth,
+                    date_of_birth=author_dto.date_of_birth,
                 )
-                authors_orm.append(author_orm)
+                for author_dto in new_book_dto.new_authors
+            ]
             book_orm.name = new_book_dto.new_name
             book_orm.authors = authors_orm
             book_orm.description = new_book_dto.new_description

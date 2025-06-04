@@ -11,10 +11,13 @@ book_router = APIRouter(
 
 @book_router.get("", response_model=list[BookDTO])
 async def get_books(
-        book_service: Annotated[BookService, Depends(BookService)]
+        book_service: Annotated[BookService, Depends(BookService)],
+        page: int,
+        size: int,
 ) -> list[BookDTO]:
-    result = book_service.get_books()
+    result = book_service.get_books(page, size)
     return result
+
 
 @book_router.post("", response_model=None)
 async def add_book(

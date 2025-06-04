@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
+from app.integrations.postgres.book_repository import paginate
 from app.models import AuthorDTO, NewAuthorDTO
 from app.orm import AuthorORM
 from app.transport.depends.db import get_session
@@ -16,17 +17,22 @@ class AuthorRepository:
     ):
         self._session = session
 
-    def get_authors(self) -> list[AuthorDTO]:
-        query_result = self._session.execute(select(AuthorORM))
-        authors_dto = []
-        for author_orm in query_result.scalars().all():
-            author_dto = AuthorDTO(
-                name=author_orm.name,
-                nationality=author_orm.nationality,
-                date_of_birth=author_orm.date_of_birth,
-            )
-            authors_dto.append(author_dto)
-        return authors_dto
+    def get_authors(
+            self,
+            page: int,
+            size: int
+    ) -> list[AuthorDTO]:
+        query = select(AuthorORM)
+        paginated_query = paginate(query, page, size)
+        authors_orm = self._session.execute(paginated_query)
+        return [AuthorDTO(
+            name=author_orm.name,
+            nationality=author_orm.nationality,
+            date_of_birth=author_orm.date_of_birth,
+        )
+        for author_orm in authors_orm.scalars().all()
+    ]
+
 
     def add_author(
             self,

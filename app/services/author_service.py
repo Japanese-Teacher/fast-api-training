@@ -13,8 +13,12 @@ class AuthorService:
     ):
         self.author_repository = author_repository
 
-    def get_authors(self) -> list[AuthorDTO]:
-        return self.author_repository.get_authors()
+    def get_authors(
+            self,
+            page: int,
+            size: int,
+    ) -> list[AuthorDTO]:
+        return self.author_repository.get_authors(page, size)
 
     def add_author(
             self,
