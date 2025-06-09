@@ -15,8 +15,10 @@ comment_router = APIRouter(
 async def get_comments(
         comment_service: Annotated[CommentService, Depends(CommentService)],
         book_id: int,
+        page: int,
+        size: int,
 ) -> list[CommentDTO]:
-    return comment_service.get_comments(book_id)
+    return comment_service.get_comments(book_id. page, size)
 
 
 @comment_router.post('', response_model=CommentDTO)

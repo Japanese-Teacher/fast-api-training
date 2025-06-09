@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
 
+from app.integrations.postgres.book_repository import paginate
 from app.models import CommentDTO
 from app.orm import CommentORM
 from app.transport.depends.db import get_session
@@ -18,9 +19,13 @@ class CommentRepository:
 
     def get_comments(
             self,
-            book_id: int
+            book_id: int,
+            page: int,
+            size: int
     ) -> list[CommentDTO]:
-        comments_orm = self._session.execute(select(CommentORM).where(CommentORM.id == book_id))
+        query = select(CommentORM).where(CommentORM.book_id == book_id)
+        paginated_query = paginate(query, page, size)
+        comments_orm = self._session.execute(paginated_query)
         return [
             CommentDTO(
                 id=comment_orm.id,

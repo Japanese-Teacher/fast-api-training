@@ -15,9 +15,11 @@ class CommentService:
 
     def get_comments(
             self,
-            book_id: int
+            book_id: int,
+            page: int,
+            size: int,
     ) -> list[CommentDTO]:
-        return self.comment_repository.get_comments(book_id)
+        return self.comment_repository.get_comments(book_id, page, size)
 
     def add_comment(
             self,

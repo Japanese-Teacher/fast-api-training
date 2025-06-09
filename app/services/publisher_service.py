@@ -13,8 +13,12 @@ class PublisherService:
     ):
         self.publisher_repository = publisher_repository
 
-    def get_publishers(self) -> list[PublisherDTO]:
-        return self.publisher_repository.get_publishers()
+    def get_publishers(
+            self,
+            page: int,
+            size: int,
+    ) -> list[PublisherDTO]:
+        return self.publisher_repository.get_publishers(page, size)
 
     def add_publisher(
             self,

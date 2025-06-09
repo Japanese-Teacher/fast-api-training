@@ -13,8 +13,12 @@ class UserService:
     ):
         self.user_repository = user_repository
 
-    def get_users(self) -> list[UserDTO]:
-        return self.user_repository.get_users()
+    def get_users(
+            self,
+            page: int,
+            size: int
+    ) -> list[UserDTO]:
+        return self.user_repository.get_users(page, size)
 
     def add_user(
             self,
